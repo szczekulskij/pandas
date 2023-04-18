@@ -331,7 +331,7 @@ class Resampler(BaseGroupBy, PandasObject):
         axis="",
     )
     def aggregate(self, func=None, *args, **kwargs):
-        result = ResamplerWindowApply(self, func, args=args, kwargs=kwargs).agg()
+        result = ResamplerWindowApply(obj = self, func = func, args=args, kwargs=kwargs).agg()
         if result is None:
             how = func
             result = self._groupby_and_aggregate(how, *args, **kwargs)

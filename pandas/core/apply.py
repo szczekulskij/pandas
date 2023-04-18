@@ -426,7 +426,8 @@ class Apply(metaclass=abc.ABCMeta):
                 colg = obj._gotitem(selection, ndim=1)
                 result_data = [colg.agg(how) for _, how in arg.items()]
                 result_index = list(arg.keys())
-            elif is_non_unique_col:
+            # elif is_non_unique_col:
+            elif True:
                 # key used for column selection and output
                 # GH#51099
                 result_data = []
