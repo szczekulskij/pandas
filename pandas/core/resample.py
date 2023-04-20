@@ -331,7 +331,10 @@ class Resampler(BaseGroupBy, PandasObject):
         axis="",
     )
     def aggregate(self, func=None, *args, **kwargs):
-        result = ResamplerWindowApply(obj = self, func = func, args=args, kwargs=kwargs).agg()
+        print("Running step1 Type of self:", type(self))
+        result = ResamplerWindowApply(obj = self, func = func, args=args, kwargs=kwargs)
+        print("type(result):", type(result))
+        result = result.agg()
         if result is None:
             how = func
             result = self._groupby_and_aggregate(how, *args, **kwargs)
@@ -1863,6 +1866,11 @@ class TimeGrouper(Grouper):
         _, ax, indexer = self._set_grouper(obj, gpr_index=None)
 
         if isinstance(ax, DatetimeIndex):
+            obj.as_index = True
+            print(obj.as_index)
+            print("IMP! type(obj):", type(obj))
+
+
             return DatetimeIndexResampler(
                 obj,
                 timegrouper=self,

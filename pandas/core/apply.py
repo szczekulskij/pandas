@@ -160,13 +160,20 @@ class Apply(metaclass=abc.ABCMeta):
         args = self.args
         kwargs = self.kwargs
 
+
+        print("type(self) in apply:", type(self))
+        print("args in apply:", args)
+        print("kwargs in apply:", kwargs)
+
         if isinstance(arg, str):
             return self.apply_str()
 
         if is_dict_like(arg):
+            print("running is_dict_like(arg)")
             return self.agg_dict_like()
         elif is_list_like(arg):
             # we require a list, but not a 'str'
+            print("running is_list_like(arg)")
             return self.agg_list_like()
 
         if callable(arg):
@@ -407,6 +414,9 @@ class Apply(metaclass=abc.ABCMeta):
         arg = self.normalize_dictlike_arg("agg", selected_obj, arg)
 
         is_groupby = isinstance(obj, (DataFrameGroupBy, SeriesGroupBy))
+        print("Whoopsie!")
+        print(type(obj))
+        print("is_groupby:", is_groupby)
         context_manager: ContextManager
         if is_groupby:
             # When as_index=False, we combine all results using indices
@@ -420,14 +430,15 @@ class Apply(metaclass=abc.ABCMeta):
             and selected_obj.columns.nunique() < len(selected_obj.columns)
         )
 
+        print("context_manager:", context_manager)
+        print("is_non_unique_col:", is_non_unique_col)
         with context_manager:
             if selected_obj.ndim == 1:
                 # key only used for output
                 colg = obj._gotitem(selection, ndim=1)
                 result_data = [colg.agg(how) for _, how in arg.items()]
                 result_index = list(arg.keys())
-            # elif is_non_unique_col:
-            elif True:
+            elif is_non_unique_col:
                 # key used for column selection and output
                 # GH#51099
                 result_data = []
@@ -510,6 +521,8 @@ class Apply(metaclass=abc.ABCMeta):
         f = cast(str, self.f)
 
         obj = self.obj
+        print("Important!")
+        print(type(obj))
 
         from pandas.core.groupby.generic import (
             DataFrameGroupBy,

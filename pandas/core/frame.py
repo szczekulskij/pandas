@@ -4890,9 +4890,11 @@ class DataFrame(NDFrame, OpsMixin):
         # Using a DataFrame would mean coercing values to one dtype
         assert not isinstance(value, DataFrame)
         if is_dict_like(value):
+            print("running is_dict_like(value)")
             return _reindex_for_setitem(Series(value), self.index)
 
         if is_list_like(value):
+            print("running is_list_like(value)")
             com.require_length_match(value, self.index)
         return sanitize_array(value, self.index, copy=True, allow_2d=True)
 

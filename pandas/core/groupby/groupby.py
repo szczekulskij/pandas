@@ -1232,6 +1232,7 @@ class GroupBy(BaseGroupBy[NDFrameT]):
 
     @final
     def _insert_inaxis_grouper(self, result: Series | DataFrame) -> DataFrame:
+        print("running _insert_inaxis_grouper")
         if isinstance(result, Series):
             result = result.to_frame()
 
@@ -2706,7 +2707,7 @@ class GroupBy(BaseGroupBy[NDFrameT]):
         5   2000-01-01 00:03:00  1
         """
         from pandas.core.resample import get_resampler_for_grouping
-
+        self.as_index = True
         return get_resampler_for_grouping(self, rule, *args, **kwargs)
 
     @final
