@@ -332,7 +332,7 @@ class Resampler(BaseGroupBy, PandasObject):
     )
     def aggregate(self, func=None, *args, **kwargs):
         print("Running step1 Type of self:", type(self))
-        result = ResamplerWindowApply(obj = self, func = func, args=args, kwargs=kwargs)
+        result = ResamplerWindowApply(obj=self, func=func, args=args, kwargs=kwargs)
         print("type(result):", type(result))
         result = result.agg()
         if result is None:
@@ -1373,7 +1373,15 @@ class _GroupByMixin(PandasObject):
             target_category=FutureWarning,
             new_message=msg,
         ):
-            result = self._groupby.apply(func)
+            # print("potential")
+            # print(type(self._groupby))
+            # print(type(self))
+            # print(type(f))
+
+            # context_manager = com.temp_setattr(self._groupby, "as_index", True)
+            # with context_manager:
+
+            result = self._groupby.apply(func, temp_as_index=False)
         return self._wrap_result(result)
 
     _upsample = _apply
@@ -1869,7 +1877,6 @@ class TimeGrouper(Grouper):
             obj.as_index = True
             print(obj.as_index)
             print("IMP! type(obj):", type(obj))
-
 
             return DatetimeIndexResampler(
                 obj,
