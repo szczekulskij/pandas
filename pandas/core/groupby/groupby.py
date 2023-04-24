@@ -1232,6 +1232,7 @@ class GroupBy(BaseGroupBy[NDFrameT]):
 
     @final
     def _insert_inaxis_grouper(self, result: Series | DataFrame) -> DataFrame:
+        print("running _insert_inaxis_grouper")
         if isinstance(result, Series):
             result = result.to_frame()
 
@@ -1467,7 +1468,7 @@ class GroupBy(BaseGroupBy[NDFrameT]):
             input="dataframe", examples=_apply_docs["dataframe_examples"]
         )
     )
-    def apply(self, func, *args, **kwargs) -> NDFrameT:
+    def apply(self, func, temp_as_index=False, *args, **kwargs) -> NDFrameT:
         func = com.is_builtin_func(func)
 
         if isinstance(func, str):
@@ -1499,7 +1500,9 @@ class GroupBy(BaseGroupBy[NDFrameT]):
         # ignore SettingWithCopy here in case the user mutates
         with option_context("mode.chained_assignment", None):
             try:
-                result = self._python_apply_general(f, self._selected_obj)
+                result = self._python_apply_general(
+                    f, self._selected_obj, not_indexed_same=temp_as_index
+                )
                 if (
                     not isinstance(self.obj, Series)
                     and self._selection is None

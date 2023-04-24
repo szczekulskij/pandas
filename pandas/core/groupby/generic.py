@@ -376,6 +376,8 @@ class SeriesGroupBy(GroupBy[Series]):
         -------
         DataFrame or Series
         """
+        print("running _wrap_applied_output")
+        print("len(values):", len(values))
         if len(values) == 0:
             # GH #6265
             if is_transform:
@@ -392,6 +394,10 @@ class SeriesGroupBy(GroupBy[Series]):
             )
         assert values is not None
 
+        print("values[0]:", values[0])
+        print("type values[0]:", type(values[0]))
+        print("self.as_index:", self.as_index)
+        print("type(self):", type(self))
         if isinstance(values[0], dict):
             # GH #823 #24880
             index = self.grouper.result_index
@@ -408,9 +414,11 @@ class SeriesGroupBy(GroupBy[Series]):
                 not_indexed_same=not_indexed_same,
                 is_transform=is_transform,
             )
+            print("not_indexed_same:", not_indexed_same)
             if isinstance(result, Series):
                 result.name = self.obj.name
             if not self.as_index and not_indexed_same:
+                print("running in elif if")
                 result = self._insert_inaxis_grouper(result)
                 result.index = default_index(len(result))
             return result
@@ -420,6 +428,7 @@ class SeriesGroupBy(GroupBy[Series]):
                 data=values, index=self.grouper.result_index, name=self.obj.name
             )
             if not self.as_index:
+                print("running in else if")
                 result = self._insert_inaxis_grouper(result)
                 result.index = default_index(len(result))
             return self._reindex_output(result)
